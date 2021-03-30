@@ -21,9 +21,14 @@ Check that file first and edit as needed.
 ## Usage
 
 
-- `git clone git@gitlab.nymte.ch:hans/ansible-validator.git`
+- `git clone git@gitlab.nymte.ch:hans/nym-validator-ansible.git`
 
-Execute the playbook from a directory you just cloned where you have your **inventory**(hosts) file(edit the example from this repo) and **playbook.yaml**. 
+You can use this as it is or put the role in your ansible roles directory. 
+If you decide to use this as a solo lone repo outside ~/.ansible or /etc/ansible then make sure you edit the `ansible.cfg` and add your **ssh-key** path. 
+- uncomment this and add the correct path for your ssh key`#private_key_file = ~/.ssh/<SSH-KEY>` 
+
+
+Then execute the playbook from a directory you just cloned where you have your **inventory**(hosts) file(edit the example from this repo) and **playbook.yaml**. 
 
 Ansible will look for the supplied role in nym-validator/roles/nym-validator/ directory and for tasks within that directory. 
 
@@ -35,6 +40,7 @@ The example playbook looks like this:
   environment: 
     LD_LIBRARY_PATH: /home/nym/nymd/
 ```
+You need to include the LD_LIBRARY_PATH either in the playbook itself or set in vars at some place. This worked the best for me. 
 
 Make sure to check list of tasks in [tasks/main.yml](tasks/main.yml) ! 
 
@@ -45,3 +51,5 @@ To execute the sample playbook after you tweak variables in [defaults/main.yml](
 ansible-playbook -i hosts.yaml playbook1.yaml -v 
 ```
 add `--step` if you want to confirm each task. 
+
+You might also run into issues with permissions on your local machine - if that is the case, then add `--become -K` 
