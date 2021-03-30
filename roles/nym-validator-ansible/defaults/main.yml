@@ -1,22 +1,11 @@
 ---
-nym_validator_version: 1.0.1
-nym_validator_binary_local_dir: ""
-#nym_validator_web_listen_address: "{{ ansible_eth1.ipv4.address }}:9100"
 
-nym_validator_textfile_dir: "/var/lib/nym_validator"
-
-nym_validator_tls_server_config: {}
-
-nym_validator_http_server_config: {}
-
-nym_validator_basic_auth_users: {}
-
-
-nym_validator_disabled_collectors: []
 
   
 _nym_validator_system_group: "nym"
 _nym_validator_system_user: "{{ _nym_validator_system_group }}"
+
+moniker: dontforgettochangethemoniker
 
 chain_id: testnet-finney
 validator_binary_local_location: "/tmp/nymd"
