@@ -1,0 +1,13 @@
+---
+- import_tasks: go_install.yml
+- import_tasks: setup-nginx.yaml
+  become: true
+- import_tasks: install.yml
+  become: true
+- import_tasks: validator_init.yml
+  become: true
+  become_method: su
+  become_user: nym
+  become_flags: '-s /bin/sh'
+- import_tasks: validator_run.yml
+  become: true

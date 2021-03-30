@@ -1,0 +1,59 @@
+---
+- name: add ld_library_path variable to bashrc
+  lineinfile:
+    path: /home/nym/.bashrc
+    line: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/nym/nymd
+- name: source .bashrc 
+  shell: source /home/nym/.bashrc
+  args:
+    executable: /bin/bash
+- name: Init validator
+  command: "{{ validator_binary_install_location|quote }}/nymd init nym-secondary --chain-id {{ chain_id|quote }}"
+  args:
+    creates: /home/nym/.nymd
+- name: Replace genesis file with genesis from initial validator
+  get_url:
+    url: https://nymtech.net/testnets/finney/genesis.json
+    dest: /home/nym/.nymd/config/genesis.json
+    mode: '0440'
+- name: add genesis validator as a persistent peer
+  replace:
+    path: /home/nym/.nymd/config/config.toml
+    regexp: 'persistent_peers = ""'
+    replace: 'persistent_peers = "e7163ea63219504344c669164d083f52434f382b@testnet-finney-validator.nymtech.net:26656"'
+- name: add minimum gas prices config to app configuration file
+  replace:
+    path: /home/nym/.nymd/config/app.toml
+    regexp: 'minimum-gas-prices = ""'
+    replace: 'minimum-gas-prices = "0.025uhal"'
+- name: enable the rpc server
+  replace:
+    path: /home/nym/.nymd/config/app.toml
+    regexp: 'enable = false'
+    replace: 'enable = true'
+- name: set cors to allow all in nymd config so that js clients work
+  replace:
+    path: /home/nym/.nymd/config/config.toml
+    regexp: 'cors_allowed_origins = \[\]'
+    replace: 'cors_allowed_origins = ["*"]'
+- name: don't create empty blocks, wait for transactions
+  replace:
+    path: /home/nym/.nymd/config/config.toml
+    regexp: 'create_empty_blocks = true'
+    replace: 'create_empty_blocks = false'
+- name: add admin user
+  expect:
+    command: "{{ validator_binary_install_location }}/nymd keys add admin"
+    responses:
+      'Enter keyring passphrase:': "{{ admin_password }}"
+      'Re-enter keyring passphrase:': "{{ admin_password }}"
+  register: admin_mnemonic
+- name: get admin account address
+  expect:
+    echo: true
+    command: "{{ validator_binary_install_location }}/nymd keys show admin -a"
+    responses:
+      'Enter keyring passphrase:': "{{ admin_password }}"
+  register: admin_address
+- name: validate the genesis file
+  command: "{{ validator_binary_install_location }}/nymd validate-genesis"

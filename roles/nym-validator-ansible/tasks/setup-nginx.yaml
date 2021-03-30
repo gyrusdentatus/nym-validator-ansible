@@ -1,0 +1,37 @@
+---
+- name: install nginx and python3-certbot-nginx
+  apt:
+    name: ['nginx']
+- name: delete default nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+- name: copy nginx site.conf
+  template:
+    src: templates/nginx.j2
+    dest: /etc/nginx/sites-enabled/{{ domain }}
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart nginx
+- name: Install Python Package
+  apt: 
+    name: python3 
+    update_cache: yes
+- name: Install Let's Encrypt Package
+  apt: 
+    name: "{{ certbot_package }}" 
+    update_cache: yes
+- name: Create and Install Cert Using certbot Plugin
+  command:
+    cmd: certbot --"{{ certbot_plugin }}" -d  "{{ domain }}" -m "{{ certbot_mail_address }}" --agree-tos --noninteractive --redirect
+    creates: /etc/letsencrypt/live/{{ domain }}/fullchain.pem
+  notify: restart nginx
+- name: Set Letsencrypt Cronjob for Certificate Auto Renewal
+  ansible.builtin.cron: 
+    name: "letsencrypt_renewal" 
+    special_time: "monthly"
+    job: "/usr/bin/certbot renew"
+  when: ansible_facts['os_family'] == "Debian"
+

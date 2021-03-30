@@ -1,0 +1,33 @@
+---
+nym_validator_version: 1.0.1
+nym_validator_binary_local_dir: ""
+#nym_validator_web_listen_address: "{{ ansible_eth1.ipv4.address }}:9100"
+
+nym_validator_textfile_dir: "/var/lib/nym_validator"
+
+nym_validator_tls_server_config: {}
+
+nym_validator_http_server_config: {}
+
+nym_validator_basic_auth_users: {}
+
+
+nym_validator_disabled_collectors: []
+
+  
+_nym_validator_system_group: "nym"
+_nym_validator_system_user: "{{ _nym_validator_system_group }}"
+
+chain_id: testnet-finney
+validator_binary_local_location: "/tmp/nymd"
+validator_binary_install_location: "/home/nym/nymd"
+libwasmvm_local_location: "/tmp/libwasmvm.so"
+libwasmvm_install_location: "/home/nym/nymd"
+NYM_HOME: "/home/nym/"
+wasmd_version: v0.14.1
+bech32_prefix: hal
+domain: motherfucking.site  # this need to change for each deployed validator. Change to yours :).
+certbot_package: "python3-certbot-nginx"
+certbot_plugin: "nginx"
+certbot_mail_address: hans@nymtech.net
+admin_password: rockyou1234

@@ -1,0 +1,23 @@
+---
+- name: install service script
+  copy:
+    src: templates/nymd.service.j2
+    dest: /etc/systemd/system/nymd.service
+    owner: root
+    group: root
+    mode: u+rwx
+- name: enable nymd.service
+  systemd:
+    name: nymd
+    enabled: true
+- name: reload nymd.service
+  systemd:
+    name: nymd
+    daemon_reload: true
+- name: start validator
+  systemd:
+    name: nymd
+    state: started
+- name: Write down the address and mnemonic
+  debug:
+    msg: "{{ admin_mnemonic.stdout_lines }}"

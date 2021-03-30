@@ -1,0 +1,23 @@
+[Unit]
+Description=Nymd (0.10.0)
+# After=network.target
+# After=systemd-user-sessions.service
+# After=network-online.target
+
+[Service]
+User=nym
+Type=simple
+# PIDFile=/run/my-service.pid
+Environment="LD_LIBRARY_PATH=/home/nym/nymd"
+ExecStart=/home/nym/nymd/nymd start
+# ExecReload=/home/transang/startup.sh reload
+# ExecStop=/home/transang/startup.sh stop
+# TimeoutSec=30
+Restart=on-failure
+RestartSec=30
+StartLimitInterval=350
+StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target
+

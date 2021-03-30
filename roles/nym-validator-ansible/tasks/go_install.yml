@@ -1,0 +1,35 @@
+---
+
+- name: Get go version
+  command: go version
+  changed_when: false
+  check_mode: false
+  register: __go_version
+  delegate_to: localhost
+  tags:
+    - go_version
+- name: Fetch Go and unpack it to /usr/local/go
+  ansible.builtin.unarchive:
+    src: https://dl.google.com/go/go1.15.7.linux-amd64.tar.gz
+    dest: /usr/local/
+    remote_src: yes
+  delegate_to: localhost
+  tags:
+    - go_download
+- name: Add env variables to include Go
+  blockinfile:
+    path: "{{ lookup('env', 'HOME') }}/.bashrc"
+    block: |
+      export GOROOT=/usr/local/go
+      export GOPATH=$HOME/go
+      export GO111MODULE=on
+      export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+    backup: yes
+  delegate_to: localhost
+  tags:
+    - go_add_path
+- name: source .bashrc
+  shell: source {{ lookup('env', 'HOME') |quote}}/.bashrc
+  args:
+    executable: /bin/bash
+  delegate_to: localhost
