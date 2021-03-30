@@ -8,7 +8,7 @@
   args:
     executable: /bin/bash
 - name: Init validator
-  command: "{{ validator_binary_install_location|quote }}/nymd init nym-secondary --chain-id {{ chain_id|quote }}"
+  command: "{{ validator_binary_install_location|quote }}/nymd init {{ moniker|quote }} --chain-id {{ chain_id|quote }}"
   args:
     creates: /home/nym/.nymd
 - name: Replace genesis file with genesis from initial validator
