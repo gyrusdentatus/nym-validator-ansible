@@ -21,7 +21,7 @@ Check that file first and edit as needed.
 ## Usage
 
 
-- `git clone git@gitlab.nymte.ch:hans/nym-validator-ansible.git`
+- `git clone https://github.com/gyrusdentatus/nym-validator-ansible`
 
 You can use this as it is or put the role in your ansible roles directory. 
 If you decide to use this as a solo lone repo outside ~/.ansible or /etc/ansible then make sure you edit the `ansible.cfg` and add your **ssh-key** path. 
