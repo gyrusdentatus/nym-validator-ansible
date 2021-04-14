@@ -44,6 +44,15 @@ You need to include the LD_LIBRARY_PATH either in the playbook itself or set in 
 
 Make sure to check list of tasks in [tasks/main.yml](tasks/main.yml) ! 
 
+To compile the binaries on the target host run the playbook with following tags as in this example:
+
+```sh
+ansible-playbook -i hosts.yaml playbook1.yaml --tags="install_go_remote, nginx_proxy, remote_host_build, validator_init, validator_run" -v
+```
+Here is a list of all tags: `install_go_local, install_go_remote, localhost_build, nginx_proxy, remote_host_build, validator_init, validator_run`
+
+For compiling the validator the usual way on a local/master machine, run it as in the example above, only change "remote" to "local" from the very same example. 
+
 **WARNING:** If you do not want to install latest version of **Go** on your local machine, then uncomment the first *import_tasks:* or use option to exclude tags. Tags are listed in `/roles/tasks/go_install.yml` - this is still a rough draft so they are not listed in this README.  
 
 To execute the sample playbook after you tweak variables in [defaults/main.yml](defaults/main.yml) and hosts.yaml, simply run this from ~/.ansible/ directory:
