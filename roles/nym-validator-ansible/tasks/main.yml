@@ -1,13 +1,36 @@
 ---
-- import_tasks: go_install.yml
-- import_tasks: setup-nginx.yaml
+- name: install the latest Go version on localhost
+  import_tasks: go_install.yml
+  tags: install_go_local
+
+- name: install the latest Go version on the target host
+  import_tasks: go_install_remote.yml
+  tags: install_go_remote
+
+- name: setup nginx and certbot and letsencrypt
+  import_tasks: setup-nginx.yaml
   become: true
-- import_tasks: install.yml
+  tags: nginx_proxy
+
+- name: compile validator locally and deploy it to the target host
+  import_tasks: install.yml
   become: true
-- import_tasks: validator_init.yml
+  tags: localhost_build
+
+- name: compile validator on remote target host
+  import_tasks: remote_compile.yml
+  become: true
+  tags: remote_host_build
+
+- name: configure the validator and run init 
+  import_tasks: validator_init.yml
   become: true
   become_method: su
   become_user: nym
   become_flags: '-s /bin/sh'
-- import_tasks: validator_run.yml
+  tags: validator_init
+
+- name: run validator with systemd 
+  import_tasks: validator_run.yml
   become: true
+  tags: validator_run
