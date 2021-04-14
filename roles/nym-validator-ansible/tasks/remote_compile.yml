@@ -1,0 +1,62 @@
+- name: Show facts available on the system
+  ansible.builtin.debug:
+    var: ansible_facts
+    
+- name: Create the nym group
+  group:
+    name: "{{ _nym_validator_system_group }}"
+    state: present
+    system: true
+  when: _nym_validator_system_group != "root"
+
+- name: Create the nym user
+  user:
+    name: "{{ _nym_validator_system_user }}"
+    group: "{{ _nym_validator_system_group }}"
+    shell: /usr/sbin/nologin
+    create_home: true
+    home: /home/nym
+  when: _nym_validator_system_user != "root"
+
+
+- name: create nymd data directory
+  file:
+    path: "{{ NYM_HOME }}/nymd"
+    state: directory
+    owner: nym
+    group: nym
+    mode: 0744
+
+- name: fetch libwasmvm from github to the target validator host
+  get_url:
+    url: https://raw.githubusercontent.com/gyrusdentatus/nym-validator-/main/libwasmvm.so
+    dest: "{{ libwasmvm_install_location }}"
+    owner: nym
+    group: nym
+    mode: u+rwx
+  register: _download_binary
+  until: _download_binary is succeeded
+  retries: 5
+  delay: 2
+  check_mode: false 
+
+- name: clone wasmd to the target host
+  git:
+    repo: 'https://github.com/cosmwasm/wasmd.git'
+    dest: /tmp/wasmd
+    version: "{{ wasmd_version }}"
+
+
+- name: compile wasmd and create nymd on the target host
+  command: /usr/local/go/bin/go build -o /tmp/nymd -mod=readonly -tags "netgo,ledger" -ldflags "-X github.com/cosmos/cosmos-sdk/version.Name=nymd -X github.com/cosmos/cosmos-sdk/version.AppName=nymd -X github.com/CosmWasm/wasmd/app.NodeDir=.nymd -X github.com/cosmos/cosmos-sdk/version.Version={{ wasmd_version }} -X github.com/cosmos/cosmos-sdk/version.Commit=1920f80d181adbeaedac1eeea1c1c6e1704d3e49 -X github.com/CosmWasm/wasmd/app.Bech32Prefix={{ bech32_prefix }} -X 'github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger'" -trimpath ./cmd/wasmd  # noqa line-length
+  args:
+    chdir: /tmp/wasmd/
+    creates: /tmp/nymd
+- name: copy the validator binary to its destination
+  copy:
+    src: /tmp/nymd
+    dest: "{{ validator_binary_install_location }}"
+    remote_src: yes
+    mode: 0744
+    owner: nym
+    group: nym
