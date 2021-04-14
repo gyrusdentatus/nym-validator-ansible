@@ -1,7 +1,7 @@
 ---
 
 
-  
+
 _nym_validator_system_group: "nym"
 _nym_validator_system_user: "{{ _nym_validator_system_group }}"
 
