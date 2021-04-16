@@ -15,7 +15,7 @@ This role also takes care of TLS certs with a little help of certbot and install
 
 ## Role Variables
 
-All variables which can be overridden are stored in [defaults/main.yml](defaults/main.yml) 
+All variables which can be overridden are stored in [roles/nym-validator-ansible/defaults/main.yml](defaults/main.yml)
 Check that file first and edit as needed. 
 
 ## Usage
@@ -28,7 +28,7 @@ If you decide to use this as a solo lone repo outside ~/.ansible or /etc/ansible
 - uncomment this and add the correct path for your ssh key`#private_key_file = ~/.ssh/<SSH-KEY>` 
 
 
-Then execute the playbook from a directory you just cloned where you have your **inventory**(hosts) file(edit the example from this repo) and **playbook.yaml**. 
+Then execute the playbook from a directory you just cloned where you have your **inventory**(hosts) file(edit the example from this repo) and **playbook1.yaml**.
 
 Ansible will look for the supplied role in nym-validator/roles/nym-validator/ directory and for tasks within that directory. 
 

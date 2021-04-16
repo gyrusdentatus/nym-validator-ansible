@@ -1,4 +1,8 @@
 ---
+- name: Install gcc
+  ansible.builtin.package:
+    name: gcc
+    state: present
 - name: Fetch Go and unpack it to /usr/local/go
   ansible.builtin.unarchive:
     src: https://dl.google.com/go/go1.15.7.linux-amd64.tar.gz
@@ -8,7 +12,7 @@
     - go_download
 - name: Add env variables to include Go
   blockinfile:
-    path: "{{ lookup('env', 'HOME') }}/.bashrc"
+    path: "$HOME/.bashrc"
     block: |
       export GOROOT=/usr/local/go
       export GOPATH=$HOME/go
@@ -18,6 +22,6 @@
   tags:
     - go_add_path
 - name: source .bashrc
-  shell: source {{ lookup('env', 'HOME') |quote}}/.bashrc
+  shell: source $HOME/.bashrc
   args:
     executable: /bin/bash

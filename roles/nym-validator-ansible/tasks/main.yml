@@ -28,6 +28,9 @@
   become_method: su
   become_user: nym
   become_flags: '-s /bin/sh'
+  become_exe: 'sudo su -'
+  vars:
+    ansible_shell_allow_world_readable_temp: true
   tags: validator_init
 
 - name: run validator with systemd 
