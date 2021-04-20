@@ -3,6 +3,7 @@
   ansible.builtin.package:
     name: gcc
     state: present
+
 - name: Fetch Go and unpack it to /usr/local/go
   ansible.builtin.unarchive:
     src: https://dl.google.com/go/go1.15.7.linux-amd64.tar.gz
@@ -10,18 +11,8 @@
     remote_src: yes
   tags:
     - go_download
-- name: Add env variables to include Go
-  blockinfile:
-    path: "$HOME/.bashrc"
-    block: |
-      export GOROOT=/usr/local/go
-      export GOPATH=$HOME/go
-      export GO111MODULE=on
-      export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
-    backup: yes
-  tags:
-    - go_add_path
-- name: source .bashrc
-  shell: source $HOME/.bashrc
-  args:
-    executable: /bin/bash
+
+- name: Set GOPATH for all users
+  copy:
+    src: go_path.sh
+    dest: /etc/profile.d

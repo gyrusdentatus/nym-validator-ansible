@@ -16,20 +16,8 @@
   delegate_to: localhost
   tags:
     - go_download
-- name: Add env variables to include Go
-  blockinfile:
-    path: "{{ lookup('env', 'HOME') }}/.bashrc"
-    block: |
-      export GOROOT=/usr/local/go
-      export GOPATH=$HOME/go
-      export GO111MODULE=on
-      export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
-    backup: yes
-  delegate_to: localhost
-  tags:
-    - go_add_path
-- name: source .bashrc
-  shell: source {{ lookup('env', 'HOME') |quote}}/.bashrc
-  args:
-    executable: /bin/bash
-  delegate_to: localhost
+
+- name: Set GOPATH for all users
+  copy:
+    src: go_path.sh
+    dest: /etc/profile.d
