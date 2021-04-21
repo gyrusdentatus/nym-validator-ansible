@@ -1,0 +1,20 @@
+---
+#nym variables
+moniker: dontforgettochangethemoniker
+chain_id: testnet-finney
+validator_binary_local_location: "/tmp/nymd"
+validator_binary_install_location: "/home/nym/nymd"
+libwasmvm_local_location: "/tmp/libwasmvm.so"
+libwasmvm_install_location: "/home/nym/nymd"
+NYM_HOME: "/home/nym/"
+wasmd_version: v0.14.1
+bech32_prefix: hal
+certbot_package: "python3-certbot-nginx"
+certbot_plugin: "nginx"
+certbot_mail_address: hans@nymtech.net
+admin_password: rockyou1234
+domain: motherfucking.site # this need to change for each deployed validator. Change to yours :).
+
+# nginx variables
+nginx_auth_user: metrics
+nginx_auth_passw: S0mePassw0rd
