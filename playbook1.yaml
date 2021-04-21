@@ -1,5 +1,7 @@
 - hosts: all
-  roles: 
+  roles:
+    - common
     - nym-validator-ansible
-  environment: 
+    - prometheus-node-exporter
+  environment:
     LD_LIBRARY_PATH: /home/nym/nymd/
