@@ -1,5 +1,7 @@
 # Ansible Role: nym validator
 
+## !!! This role was for an older testnet of Nym v0.10.0-0.10.1 and is deprecated - please see the newer repo, the role itself is way better and will be probably updated for the mainnet with added features. 
+
 ## Description
 
 Deploy nym validator using ansible. With an option to install the right version of Go on your local machine to compile binaries locally.
